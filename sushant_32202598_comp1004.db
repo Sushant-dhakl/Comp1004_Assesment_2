@@ -1,0 +1,1114 @@
+
+-- UNNORMALIZED MASTER TABLE
+--===============================
+
+CREATE TABLE UnnormalizedMasterTable (
+
+    UserID                       INTEGER,
+    UserFullName                 TEXT,
+    UserEmailAddress             TEXT,
+    UserPhoneNumber              TEXT,
+    UserType                     TEXT,
+    StudentIdentificationNumber  TEXT,
+    StaffIdentificationNumber    TEXT,
+
+    OrderID                      INTEGER,
+    OrderDate                    TEXT,
+    OrderStatus                  TEXT,
+
+    PurchasedProductName1        TEXT,
+    PurchasedProductCategory1    TEXT,
+    PurchasedProductUnitPrice1   REAL,
+    PurchasedProductQuantity1    INTEGER,
+
+    PurchasedProductName2        TEXT,
+    PurchasedProductCategory2    TEXT,
+    PurchasedProductUnitPrice2   REAL,
+    PurchasedProductQuantity2    INTEGER,
+
+    PurchasedProductName3        TEXT,
+    PurchasedProductCategory3    TEXT,
+    PurchasedProductUnitPrice3   REAL,
+    PurchasedProductQuantity3    INTEGER,
+
+    PaymentID                    INTEGER,
+    PaymentDate                  TEXT,
+    PaymentAmount                REAL,
+    PaymentMethod                TEXT,
+    PaymentStatus                TEXT,
+
+    GymMembershipID              INTEGER,
+    GymMembershipPlanName        TEXT,
+    GymMembershipStartDate       TEXT,
+    GymMembershipEndDate         TEXT,
+    GymMembershipStatus          TEXT
+);
+
+
+-- SAMPLE DATA FOR UNNORMALIZED TABLE
+-- =========================================================
+
+INSERT INTO UnnormalizedMasterTable (
+    UserID,
+    UserFullName,
+    UserEmailAddress,
+    UserPhoneNumber,
+    UserType,
+    StudentIdentificationNumber,
+    StaffIdentificationNumber,
+    OrderID,
+    OrderDate,
+    OrderStatus,
+    PurchasedProductName1,
+    PurchasedProductCategory1,
+    PurchasedProductUnitPrice1,
+    PurchasedProductQuantity1,
+    PurchasedProductName2,
+    PurchasedProductCategory2,
+    PurchasedProductUnitPrice2,
+    PurchasedProductQuantity2,
+    PurchasedProductName3,
+    PurchasedProductCategory3,
+    PurchasedProductUnitPrice3,
+    PurchasedProductQuantity3,
+    PaymentID,
+    PaymentDate,
+    PaymentAmount,
+    PaymentMethod,
+    PaymentStatus,
+    GymMembershipID,
+    GymMembershipPlanName,
+    GymMembershipStartDate,
+    GymMembershipEndDate,
+    GymMembershipStatus
+)
+VALUES
+(
+    1,
+    'Sushant Dhakal',
+    'sushant@example.com',
+    '0412345678',
+    'Student',
+    '32202598',
+    NULL,
+    2001,
+    '2026-08-02',
+    'Completed',
+    'Data Structures Textbook',
+    'Textbooks',
+    95.00,
+    1,
+    'Wireless Mouse',
+    'Study Materials',
+    25.00,
+    2,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    6001,
+    '2026-08-02',
+    145.00,
+    'Bank Transfer',
+    'Successful',
+    301,
+    'Semester Gym Pass',
+    '2026-08-01',
+    '2026-11-30',
+    'Active'
+),
+(
+    2,
+    'Amelia Tran',
+    'amelia.tran@example.com',
+    '0433221100',
+    'Student',
+    '30411782',
+    NULL,
+    2002,
+    '2026-08-10',
+    'Processing',
+    'Highlighter Pack',
+    'Stationery',
+    6.00,
+    2,
+    'Scientific Calculator',
+    'Stationery',
+    32.50,
+    1,
+    'UNDA Cap',
+    'Merchandise',
+    20.00,
+    1,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+),
+(
+    3,
+    'Marcus Chen',
+    'marcus.chen@example.com',
+    '0455998877',
+    'Staff',
+    NULL,
+    'STF-112',
+    2003,
+    '2026-08-14',
+    'Confirmed',
+    'Whiteboard Markers',
+    'Stationery',
+    9.90,
+    4,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    6002,
+    '2026-08-14',
+    39.60,
+    'Credit Card',
+    'Successful',
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+);
+
+SELECT * FROM UnnormalizedMasterTable;
+
+
+-- Display UNF table
+SELECT * FROM UnnormalizedMasterTable;
+
+
+
+-- STAGE 1: FIRST NORMAL FORM (1NF)
+-- Repeating product groups are removed.
+-- There is now one row for each order-product combination.
+-- Composite natural key:
+-- (OrderID, ProductName)
+-- =========================================================
+
+CREATE TABLE OrderProductLine_1NF (
+
+    UserID                       INTEGER,
+    UserFullName                 TEXT,
+    UserEmailAddress             TEXT,
+    UserPhoneNumber              TEXT,
+    UserType                     TEXT,
+    StudentIdentificationNumber  TEXT,
+    StaffIdentificationNumber    TEXT,
+
+    OrderID                      INTEGER,
+    OrderDate                    TEXT,
+    OrderStatus                  TEXT,
+
+    ProductName                  TEXT,
+    ProductCategory              TEXT,
+    ProductUnitPrice             REAL,
+    ProductQuantity              INTEGER,
+
+    PaymentID                    INTEGER,
+    PaymentDate                  TEXT,
+    PaymentAmount                REAL,
+    PaymentMethod                TEXT,
+    PaymentStatus                TEXT,
+
+    GymMembershipID              INTEGER,
+    GymMembershipPlanName        TEXT,
+    GymMembershipStartDate       TEXT,
+    GymMembershipEndDate         TEXT,
+    GymMembershipStatus          TEXT
+);
+-- 1NF DATA
+-- =========================================================
+
+-- Order 2001
+INSERT INTO OrderProductLine_1NF VALUES
+(1, 'Sushant Dhakal', 'sushant@example.com', '0412345678', 'Student',
+ '32202598', NULL,
+ 2001, '2026-08-02', 'Completed',
+ 'Data Structures Textbook', 'Textbooks', 95.00, 1,
+ 6001, '2026-08-02', 145.00, 'Bank Transfer', 'Successful',
+ 301, 'Semester Gym Pass', '2026-08-01', '2026-11-30', 'Active');
+
+INSERT INTO OrderProductLine_1NF VALUES
+(1, 'Sushant Dhakal', 'sushant@example.com', '0412345678', 'Student',
+ '32202598', NULL,
+ 2001, '2026-08-02', 'Completed',
+ 'Wireless Mouse', 'Study Materials', 25.00, 2,
+ 6001, '2026-08-02', 145.00, 'Bank Transfer', 'Successful',
+ 301, 'Semester Gym Pass', '2026-08-01', '2026-11-30', 'Active');
+
+
+-- Order 2002
+INSERT INTO OrderProductLine_1NF VALUES
+(2, 'Amelia Tran', 'amelia.tran@example.com', '0433221100', 'Student',
+ '30411782', NULL,
+ 2002, '2026-08-10', 'Processing',
+ 'Highlighter Pack', 'Stationery', 6.00, 2,
+ NULL, NULL, NULL, NULL, NULL,
+ NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO OrderProductLine_1NF VALUES
+(2, 'Amelia Tran', 'amelia.tran@example.com', '0433221100', 'Student',
+ '30411782', NULL,
+ 2002, '2026-08-10', 'Processing',
+ 'Scientific Calculator', 'Stationery', 32.50, 1,
+ NULL, NULL, NULL, NULL, NULL,
+ NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO OrderProductLine_1NF VALUES
+(2, 'Amelia Tran', 'amelia.tran@example.com', '0433221100', 'Student',
+ '30411782', NULL,
+ 2002, '2026-08-10', 'Processing',
+ 'UNDA Cap', 'Merchandise', 20.00, 1,
+ NULL, NULL, NULL, NULL, NULL,
+ NULL, NULL, NULL, NULL, NULL);
+
+
+-- Order 2003
+INSERT INTO OrderProductLine_1NF VALUES
+(3, 'Marcus Chen', 'marcus.chen@example.com', '0455998877', 'Staff',
+ NULL, 'STF-112',
+ 2003, '2026-08-14', 'Confirmed',
+ 'Whiteboard Markers', 'Stationery', 9.90, 4,
+ 6002, '2026-08-14', 39.60, 'Credit Card', 'Successful',
+ NULL, NULL, NULL, NULL, NULL);
+
+
+-- Display 1NF table
+SELECT * FROM OrderProductLine_1NF;
+
+-- STAGE 2: SECOND NORMAL FORM (2NF)
+-- Partial dependencies are removed.
+-- User information depends on UserID.
+-- Order information depends on OrderID.
+-- Product information depends on ProductName.
+-- OrderItem contains the composite relationship.
+-- Payment depends on PaymentID.
+-- Gym membership depends on GymMembershipID.
+
+-- USER TABLE
+-- =========================================================
+
+CREATE TABLE User_2NF (
+
+    UserID                       INTEGER PRIMARY KEY,
+
+    UserFullName                 TEXT NOT NULL,
+
+    UserEmailAddress             TEXT NOT NULL,
+
+    UserPhoneNumber              TEXT,
+
+    UserType                     TEXT NOT NULL,
+
+    StudentIdentificationNumber  TEXT,
+
+    StaffIdentificationNumber    TEXT
+);
+-- CUSTOMER ORDER TABLE
+-- =========================================================
+
+CREATE TABLE CustomerOrder_2NF (
+
+    OrderID       INTEGER PRIMARY KEY,
+
+    OrderDate     TEXT NOT NULL,
+
+    OrderStatus   TEXT NOT NULL,
+
+    UserID        INTEGER NOT NULL,
+
+    FOREIGN KEY (UserID)
+        REFERENCES User_2NF(UserID)
+);
+-- PRODUCT TABLE
+-- =========================================================
+
+CREATE TABLE Product_2NF (
+
+    ProductName       TEXT PRIMARY KEY,
+
+    ProductCategory   TEXT NOT NULL,
+
+    ProductUnitPrice  REAL NOT NULL
+);
+-- ORDER ITEM TABLE
+-- =========================================================
+
+CREATE TABLE OrderItem_2NF (
+
+    OrderID          INTEGER,
+
+    ProductName      TEXT,
+
+    ProductQuantity  INTEGER NOT NULL,
+
+    PRIMARY KEY (OrderID, ProductName),
+
+    FOREIGN KEY (OrderID)
+        REFERENCES CustomerOrder_2NF(OrderID),
+
+    FOREIGN KEY (ProductName)
+        REFERENCES Product_2NF(ProductName)
+);
+-- PAYMENT TABLE
+-- =========================================================
+
+CREATE TABLE Payment_2NF (
+
+    PaymentID       INTEGER PRIMARY KEY,
+
+    PaymentDate     TEXT NOT NULL,
+
+    PaymentAmount   REAL NOT NULL,
+
+    PaymentMethod   TEXT NOT NULL,
+
+    PaymentStatus   TEXT NOT NULL,
+
+    OrderID         INTEGER,
+
+    FOREIGN KEY (OrderID)
+        REFERENCES CustomerOrder_2NF(OrderID)
+);
+-- GYM MEMBERSHIP TABLE
+-- =========================================================
+
+CREATE TABLE GymMembership_2NF (
+
+    GymMembershipID          INTEGER PRIMARY KEY,
+
+    GymMembershipPlanName    TEXT NOT NULL,
+
+    GymMembershipStartDate   TEXT NOT NULL,
+
+    GymMembershipEndDate     TEXT NOT NULL,
+
+    GymMembershipStatus      TEXT NOT NULL,
+
+    UserID                   INTEGER NOT NULL,
+
+    FOREIGN KEY (UserID)
+        REFERENCES User_2NF(UserID)
+);
+-- 2NF DATA
+-- =========================================================
+
+INSERT INTO User_2NF VALUES
+(1, 'Sushant Dhakal', 'sushant@example.com',
+ '0412345678', 'Student', '32202598', NULL),
+
+(2, 'Amelia Tran', 'amelia.tran@example.com',
+ '0433221100', 'Student', '30411782', NULL),
+
+(3, 'Marcus Chen', 'marcus.chen@example.com',
+ '0455998877', 'Staff', NULL, 'STF-112');
+
+
+INSERT INTO CustomerOrder_2NF VALUES
+(2001, '2026-08-02', 'Completed', 1),
+(2002, '2026-08-10', 'Processing', 2),
+(2003, '2026-08-14', 'Confirmed', 3);
+
+
+INSERT INTO Product_2NF VALUES
+('Data Structures Textbook', 'Textbooks', 95.00),
+('Wireless Mouse', 'Study Materials', 25.00),
+('Highlighter Pack', 'Stationery', 6.00),
+('Scientific Calculator', 'Stationery', 32.50),
+('UNDA Cap', 'Merchandise', 20.00),
+('Whiteboard Markers', 'Stationery', 9.90);
+
+
+INSERT INTO OrderItem_2NF VALUES
+(2001, 'Data Structures Textbook', 1),
+(2001, 'Wireless Mouse', 2),
+(2002, 'Highlighter Pack', 2),
+(2002, 'Scientific Calculator', 1),
+(2002, 'UNDA Cap', 1),
+(2003, 'Whiteboard Markers', 4);
+
+
+INSERT INTO Payment_2NF VALUES
+(6001, '2026-08-02', 145.00, 'Bank Transfer', 'Successful', 2001),
+(6002, '2026-08-14', 39.60, 'Credit Card', 'Successful', 2003);
+
+
+INSERT INTO GymMembership_2NF VALUES
+(301, 'Semester Gym Pass', '2026-08-01',
+ '2026-11-30', 'Active', 1);
+
+
+-- Display 2NF tables
+SELECT * FROM User_2NF;
+
+SELECT * FROM CustomerOrder_2NF;
+
+SELECT * FROM Product_2NF;
+
+SELECT * FROM OrderItem_2NF;
+
+SELECT * FROM Payment_2NF;
+
+SELECT * FROM GymMembership_2NF;
+
+-- STAGE 3: THIRD NORMAL FORM (3NF)
+-- =========================================================
+--
+-- Transitive dependencies are removed.
+--
+-- User -> UserType -> Student/Staff information
+-- Product -> Category
+-- GymMembership -> MembershipPlan
+--
+-- These dependencies are separated into their own tables.
+-- =========================================================
+
+
+-- USER
+-- =========================================================
+
+CREATE TABLE User (
+
+    UserID              INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    UserFullName        TEXT NOT NULL,
+
+    UserEmailAddress    TEXT NOT NULL UNIQUE,
+
+    UserPhoneNumber     TEXT,
+
+    UserType            TEXT NOT NULL
+                        CHECK (UserType IN ('Student', 'Staff'))
+);
+-- STUDENT
+-- =========================================================
+
+CREATE TABLE Student (
+
+    UserID                       INTEGER PRIMARY KEY,
+
+    StudentIdentificationNumber  TEXT NOT NULL UNIQUE,
+
+    FOREIGN KEY (UserID)
+        REFERENCES User(UserID)
+);
+-- STAFF
+-- =========================================================
+
+CREATE TABLE Staff (
+
+    UserID                     INTEGER PRIMARY KEY,
+
+    StaffIdentificationNumber  TEXT NOT NULL UNIQUE,
+
+    FOREIGN KEY (UserID)
+        REFERENCES User(UserID)
+);
+-- CATEGORY
+-- =========================================================
+
+CREATE TABLE Category (
+
+    CategoryID     INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    CategoryName   TEXT NOT NULL UNIQUE
+);
+-- PRODUCT
+-- =========================================================
+
+CREATE TABLE Product (
+
+    ProductID             INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    ProductName           TEXT NOT NULL,
+
+    ProductDescription    TEXT,
+
+    ProductPrice          REAL NOT NULL
+                          CHECK (ProductPrice >= 0),
+
+    ProductStockQuantity  INTEGER NOT NULL DEFAULT 0
+                          CHECK (ProductStockQuantity >= 0),
+
+    CategoryID            INTEGER NOT NULL,
+
+    FOREIGN KEY (CategoryID)
+        REFERENCES Category(CategoryID)
+);
+-- CUSTOMER ORDER
+-- =========================================================
+
+CREATE TABLE CustomerOrder (
+
+    OrderID       INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    OrderDate     TEXT NOT NULL DEFAULT CURRENT_DATE,
+
+    OrderStatus   TEXT NOT NULL DEFAULT 'Pending'
+                  CHECK (
+                      OrderStatus IN
+                      ('Pending',
+                       'Confirmed',
+                       'Processing',
+                       'Completed',
+                       'Cancelled')
+                  ),
+
+    UserID        INTEGER NOT NULL,
+
+    FOREIGN KEY (UserID)
+        REFERENCES User(UserID)
+);
+-- ORDER ITEM
+-- =========================================================
+
+CREATE TABLE OrderItem (
+
+    OrderItemID    INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    OrderID        INTEGER NOT NULL,
+
+    ProductID      INTEGER NOT NULL,
+
+    ItemQuantity   INTEGER NOT NULL
+                   CHECK (ItemQuantity > 0),
+
+    ItemUnitPrice  REAL NOT NULL
+                   CHECK (ItemUnitPrice >= 0),
+
+    FOREIGN KEY (OrderID)
+        REFERENCES CustomerOrder(OrderID),
+
+    FOREIGN KEY (ProductID)
+        REFERENCES Product(ProductID)
+);
+
+
+-- =========================================================
+-- MEMBERSHIP PLAN
+-- =========================================================
+
+CREATE TABLE MembershipPlan (
+
+    PlanID              INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    PlanName            TEXT NOT NULL UNIQUE,
+
+    PlanDurationMonths  INTEGER NOT NULL
+                        CHECK (PlanDurationMonths > 0),
+
+    PlanPrice           REAL NOT NULL
+                        CHECK (PlanPrice >= 0)
+);
+
+-- GYM MEMBERSHIP
+-- =========================================================
+
+CREATE TABLE GymMembership (
+
+    MembershipID          INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    UserID                INTEGER NOT NULL,
+
+    PlanID                INTEGER NOT NULL,
+
+    MembershipStartDate   TEXT NOT NULL,
+
+    MembershipEndDate     TEXT NOT NULL,
+
+    MembershipStatus      TEXT NOT NULL DEFAULT 'Active'
+                          CHECK (
+                              MembershipStatus IN
+                              ('Active',
+                               'Expired',
+                               'Cancelled')
+                          ),
+
+    FOREIGN KEY (UserID)
+        REFERENCES User(UserID),
+
+    FOREIGN KEY (PlanID)
+        REFERENCES MembershipPlan(PlanID)
+);
+
+
+
+-- PAYMENT
+-- =========================================================
+
+CREATE TABLE Payment (
+
+    PaymentID       INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    OrderID         INTEGER,
+
+    MembershipID    INTEGER,
+
+    PaymentDate     TEXT NOT NULL DEFAULT CURRENT_DATE,
+
+    PaymentAmount   REAL NOT NULL
+                    CHECK (PaymentAmount >= 0),
+
+    PaymentMethod   TEXT NOT NULL
+                    CHECK (
+                        PaymentMethod IN
+                        ('Credit Card',
+                         'Debit Card',
+                         'Cash',
+                         'Bank Transfer')
+                    ),
+
+    PaymentStatus   TEXT NOT NULL DEFAULT 'Pending'
+                    CHECK (
+                        PaymentStatus IN
+                        ('Pending',
+                         'Successful',
+                         'Failed',
+                         'Refunded')
+                    ),
+
+    FOREIGN KEY (OrderID)
+        REFERENCES CustomerOrder(OrderID),
+
+    FOREIGN KEY (MembershipID)
+        REFERENCES GymMembership(MembershipID),
+
+    CHECK (
+        (OrderID IS NOT NULL AND MembershipID IS NULL)
+        OR
+        (OrderID IS NULL AND MembershipID IS NOT NULL)
+    )
+);
+
+-- POPULATING THE FINAL 3NF DATABASE
+-- 1. USERS - 10 RECORDS
+-- =========================================================
+
+INSERT INTO User
+(UserID, UserFullName, UserEmailAddress, UserPhoneNumber, UserType)
+VALUES
+(1, 'Sushant Dhakal', 'sushant@example.com', '0412345678', 'Student'),
+
+(2, 'Amelia Tran', 'amelia.tran@example.com', '0433221100', 'Student'),
+
+(3, 'Marcus Chen', 'marcus.chen@example.com', '0455998877', 'Staff'),
+
+(4, 'Daniel Wilson', 'daniel.wilson@example.com', '0422113344', 'Student'),
+
+(5, 'Olivia Brown', 'olivia.brown@example.com', '0401223344', 'Student'),
+
+(6, 'Ethan Smith', 'ethan.smith@example.com', '0433445566', 'Staff'),
+
+(7, 'Sophia Nguyen', 'sophia.nguyen@example.com', '0411223344', 'Student'),
+
+(8, 'Liam Taylor', 'liam.taylor@example.com', '0455667788', 'Staff'),
+
+(9, 'Mia Johnson', 'mia.johnson@example.com', '0422334455', 'Student'),
+
+-- Fictitious record
+(10, 'Alex Morgan', 'alex.morgan@example.com', '0400112233', 'Student');
+
+
+-- =========================================================
+-- 2. STUDENTS
+-- =========================================================
+
+INSERT INTO Student
+(UserID, StudentIdentificationNumber)
+VALUES
+(1, '32202598'),
+
+(2, '30411782'),
+
+(4, '31104567'),
+
+(5, '30098765'),
+
+(7, '32345678'),
+
+(9, '31876543'),
+
+(10, '32987654');
+
+
+-- =========================================================
+-- 3. STAFF
+-- =========================================================
+
+INSERT INTO Staff
+(UserID, StaffIdentificationNumber)
+VALUES
+(3, 'STF-112'),
+
+(6, 'STF-205'),
+
+(8, 'STF-318');
+
+
+-- =========================================================
+-- 4. CATEGORIES - 4 RECORDS
+-- =========================================================
+
+INSERT INTO Category
+(CategoryID, CategoryName)
+VALUES
+(1, 'Textbooks'),
+
+(2, 'Study Materials'),
+
+(3, 'Stationery'),
+
+(4, 'Merchandise');
+
+
+-- =========================================================
+-- 5. PRODUCTS - 10 RECORDS
+-- =========================================================
+
+INSERT INTO Product
+(ProductID, ProductName, ProductDescription,
+ ProductPrice, ProductStockQuantity, CategoryID)
+VALUES
+
+(1,
+ 'Data Structures Textbook',
+ 'Textbook covering data structures and algorithms',
+ 95.00, 18, 1),
+
+(2,
+ 'Wireless Mouse',
+ 'Wireless mouse for computer use',
+ 25.00, 35, 2),
+
+(3,
+ 'Highlighter Pack',
+ 'Pack of assorted colour highlighters',
+ 6.00, 80, 3),
+
+(4,
+ 'Scientific Calculator',
+ 'Scientific calculator for mathematics and science',
+ 32.50, 25, 3),
+
+(5,
+ 'UNDA Cap',
+ 'University branded cap',
+ 20.00, 40, 4),
+
+(6,
+ 'Whiteboard Markers',
+ 'Pack of whiteboard markers',
+ 9.90, 60, 3),
+
+(7,
+ 'Python Programming Book',
+ 'Introduction to Python programming',
+ 75.00, 20, 1),
+
+(8,
+ 'USB-C Cable',
+ 'USB-C charging and data cable',
+ 15.00, 50, 2),
+
+(9,
+ 'Notebook',
+ 'A4 lined study notebook',
+ 8.50, 100, 3),
+
+(10,
+ 'University Hoodie',
+ 'University branded hoodie',
+ 55.00, 30, 4);
+
+
+-- =========================================================
+-- 6. CUSTOMER ORDERS - 10 RECORDS
+-- =========================================================
+
+INSERT INTO CustomerOrder
+(OrderID, OrderDate, OrderStatus, UserID)
+VALUES
+
+(2001, '2026-08-02', 'Completed', 1),
+
+(2002, '2026-08-10', 'Processing', 2),
+
+(2003, '2026-08-14', 'Confirmed', 3),
+
+(2004, '2026-08-18', 'Completed', 4),
+
+(2005, '2026-08-21', 'Pending', 5),
+
+(2006, '2026-08-25', 'Completed', 6),
+
+(2007, '2026-08-28', 'Processing', 7),
+
+(2008, '2026-09-01', 'Confirmed', 8),
+
+(2009, '2026-09-05', 'Completed', 9),
+
+(2010, '2026-09-08', 'Pending', 10);
+
+
+-- =========================================================
+-- 7. ORDER ITEMS - 15 RECORDS
+-- =========================================================
+
+INSERT INTO OrderItem
+(OrderItemID, OrderID, ProductID, ItemQuantity, ItemUnitPrice)
+VALUES
+
+-- Order 2001
+(1, 2001, 1, 1, 95.00),
+
+(2, 2001, 2, 2, 25.00),
+
+
+-- Order 2002
+(3, 2002, 3, 2, 6.00),
+
+(4, 2002, 4, 1, 32.50),
+
+(5, 2002, 5, 1, 20.00),
+
+
+-- Order 2003
+(6, 2003, 6, 4, 9.90),
+
+
+-- Order 2004
+(7, 2004, 7, 1, 75.00),
+
+(8, 2004, 9, 3, 8.50),
+
+
+-- Order 2005
+(9, 2005, 8, 2, 15.00),
+
+
+-- Order 2006
+(10, 2006, 10, 1, 55.00),
+
+(11, 2006, 6, 2, 9.90),
+
+
+-- Order 2007
+(12, 2007, 2, 1, 25.00),
+
+(13, 2007, 9, 2, 8.50),
+
+
+-- Order 2008
+(14, 2008, 7, 1, 75.00),
+
+
+-- Order 2009
+(15, 2009, 5, 2, 20.00);
+
+
+-- =========================================================
+-- 8. MEMBERSHIP PLANS
+-- =========================================================
+
+INSERT INTO MembershipPlan
+(PlanID, PlanName, PlanDurationMonths, PlanPrice)
+VALUES
+
+(1, 'Semester Gym Pass', 4, 160.00),
+
+(2, 'Annual Gym Pass', 12, 420.00);
+
+
+-- =========================================================
+-- 9. GYM MEMBERSHIPS
+-- =========================================================
+
+INSERT INTO GymMembership
+(MembershipID, UserID, PlanID,
+ MembershipStartDate, MembershipEndDate, MembershipStatus)
+VALUES
+
+(301, 1, 1,
+ '2026-08-01', '2026-11-30', 'Active'),
+
+(302, 4, 2,
+ '2026-01-15', '2027-01-14', 'Active'),
+
+(303, 7, 1,
+ '2026-08-15', '2026-12-14', 'Active'),
+
+(304, 9, 1,
+ '2026-07-01', '2026-10-31', 'Expired');
+
+
+-- =========================================================
+-- 10. PAYMENTS - 8 RECORDS
+-- =========================================================
+
+INSERT INTO Payment
+(PaymentID, OrderID, MembershipID,
+ PaymentDate, PaymentAmount, PaymentMethod, PaymentStatus)
+VALUES
+
+(6001, 2001, NULL,
+ '2026-08-02', 145.00,
+ 'Bank Transfer', 'Successful'),
+
+(6002, 2003, NULL,
+ '2026-08-14', 39.60,
+ 'Credit Card', 'Successful'),
+
+(6003, 2004, NULL,
+ '2026-08-18', 100.50,
+ 'Debit Card', 'Successful'),
+
+(6004, 2005, NULL,
+ '2026-08-21', 30.00,
+ 'Credit Card', 'Pending'),
+
+(6005, 2006, NULL,
+ '2026-08-25', 74.80,
+ 'Cash', 'Successful'),
+
+(6006, 2007, NULL,
+ '2026-08-28', 42.00,
+ 'Bank Transfer', 'Successful'),
+
+(6007, 2008, NULL,
+ '2026-09-01', 75.00,
+ 'Credit Card', 'Successful'),
+
+(6008, 2009, NULL,
+ '2026-09-05', 40.00,
+ 'Debit Card', 'Successful');
+
+
+
+-- DISPLAY FINAL 3NF TABLES
+-- =========================================================
+
+SELECT * FROM User;
+
+SELECT * FROM Student;
+
+SELECT * FROM Staff;
+
+SELECT * FROM Category;
+
+SELECT * FROM Product;
+
+SELECT * FROM CustomerOrder;
+
+SELECT * FROM OrderItem;
+
+SELECT * FROM MembershipPlan;
+
+SELECT * FROM GymMembership;
+
+SELECT * FROM Payment;
+
+-- VERIFY REQUIRED RECORD COUNTS
+-- =========================================================
+
+SELECT 'Users' AS TableName, COUNT(*) AS RecordCount
+FROM User
+
+UNION ALL
+
+SELECT 'Categories', COUNT(*)
+FROM Category
+
+UNION ALL
+
+SELECT 'Products', COUNT(*)
+FROM Product
+
+UNION ALL
+
+SELECT 'Orders', COUNT(*)
+FROM CustomerOrder
+
+UNION ALL
+
+SELECT 'Order Items', COUNT(*)
+FROM OrderItem
+
+UNION ALL
+
+SELECT 'Payments', COUNT(*)
+FROM Payment;
+
+
+--Queries, views, indexes
+--========================================
+-- Sushant Dhakal, 32202598
+
+SELECT
+    UserID,
+    UserFullName,
+    UserType
+FROM User
+WHERE UserType = 'Student'
+ORDER BY UserFullName;
+
+
+SELECT
+    co.OrderID,
+    u.UserFullName,
+    co.OrderDate,
+    co.OrderStatus
+FROM CustomerOrder AS co
+INNER JOIN User AS u
+    ON co.UserID = u.UserID
+ORDER BY co.OrderID;
+
+
+SELECT
+    p.ProductName,
+    SUM(oi.ItemQuantity) AS TotalQuantitySold,
+    SUM(oi.ItemQuantity * oi.ItemUnitPrice) AS TotalSales
+FROM OrderItem AS oi
+INNER JOIN Product AS p
+    ON oi.ProductID = p.ProductID
+GROUP BY
+    p.ProductID,
+    p.ProductName
+ORDER BY TotalSales DESC;
+
+CREATE VIEW vw_OrderSummary AS
+SELECT
+    co.OrderID,
+    u.UserFullName,
+    co.OrderDate,
+    co.OrderStatus,
+    SUM(oi.ItemQuantity * oi.ItemUnitPrice) AS OrderTotal
+FROM CustomerOrder AS co
+INNER JOIN User AS u
+    ON co.UserID = u.UserID
+INNER JOIN OrderItem AS oi
+    ON co.OrderID = oi.OrderID
+GROUP BY
+    co.OrderID,
+    u.UserFullName,
+    co.OrderDate,
+    co.OrderStatus;
+
+SELECT *
+FROM vw_OrderSummary
+ORDER BY OrderID;
